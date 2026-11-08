@@ -278,6 +278,8 @@ main, footer, .site-head { position: relative; z-index: 1; }
   .case .info { grid-column: 8 / -1; }
   .case:nth-child(even) .cover { grid-column: 6 / -1; order: 2; }
   .case:nth-child(even) .info { grid-column: 1 / span 5; }
+  .case { align-items: start; }
+  .case .cover { position: sticky; top: calc(var(--hud-h) + 1.5rem); }
 }
 .cover { --cut: 16px; position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
 .cover .ground {
@@ -337,6 +339,19 @@ main, footer, .site-head { position: relative; z-index: 1; }
   .case details[open] .detail-wrap { animation: drop .4s var(--ease-out); }
   @keyframes drop { from { opacity: 0; transform: translateY(-.5rem); } to { opacity: 1; transform: none; } }
 }
+
+.detail-h { color: var(--signal-text); margin: 1.5rem 0 .6rem; }
+.detail-wrap > .detail-h:first-child { margin-top: 1.25rem; }
+.detail-p { color: var(--muted); max-width: 52ch; }
+.detail-wrap > .detail { margin-top: 0; }
+.detail-wrap > .detail:first-child { margin-top: 1.25rem; }
+
+.info .facts { margin-top: 1.4rem; padding-top: 1.1rem; }
+.info .facts dt { font-size: 2rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .25rem 0 1rem; padding: 0; list-style: none; }
+.flow { gap: .45rem .9rem; }
+.flow li { position: relative; padding: .4rem .65rem; background: color-mix(in oklch, var(--signal) 14%, transparent); border-left: 2px solid var(--signal); color: var(--fg); }
+.flow li + li::before { content: ""; position: absolute; left: calc(-.9rem - 2px); top: 50%; width: .9rem; height: 1px; background: var(--signal); }
 
 /* Experience */
 .ex-head, .ex summary { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: .25rem 1rem; align-items: center; }
@@ -471,7 +486,7 @@ main, footer, .site-head { position: relative; z-index: 1; }
             <span class="label muted"><span id="eth-date" lang="am" style="font-family:var(--geez);letter-spacing:0;text-transform:none;font-size:.85rem"></span></span>
           </div>
         </div>
-        <p class="text" data-reveal>Hello! I’m Abel, a full-stack and mobile developer with a B.Sc. in Computer Engineering. <span class="muted">I build large admin systems, multi-tenant back-ends, versioned REST APIs and cross-platform apps, from a tutoring company’s ERP with 80+ modules to gym and rental SaaS. I care about clean architecture, tested code and interfaces that work in Amharic and English.</span></p>
+        <p class="text" data-reveal>Hello! I’m Abel, a full-stack and mobile developer with a B.Sc. in Computer Engineering. <span class="muted">I build large admin systems, multi-tenant back-ends, versioned REST APIs, multisite web platforms and cross-platform apps, from a tutoring company’s operations platform to gym and rental SaaS. I care about clean architecture, tested code and interfaces that work in Amharic and English.</span></p>
       </div>
     </div>
   </section>
@@ -494,7 +509,7 @@ main, footer, .site-head { position: relative; z-index: 1; }
         <div class="tk-row" data-reveal><h3 class="label"><span class="c">04</span>Front-end</h3><ul><li class="chip cut outline">React</li><li class="chip cut outline">Tailwind CSS</li><li class="chip cut outline">Alpine.js</li></ul></div>
         <div class="tk-row" data-reveal><h3 class="label"><span class="c">05</span>Databases</h3><ul><li class="chip cut outline">MySQL</li><li class="chip cut outline">PostgreSQL</li><li class="chip cut outline">Redis</li></ul></div>
         <div class="tk-row" data-reveal><h3 class="label"><span class="c">06</span>Testing and DevOps</h3><ul><li class="chip cut outline">Pest</li><li class="chip cut outline">Larastan</li><li class="chip cut outline">Pint</li><li class="chip cut outline">Docker</li><li class="chip cut outline">Git</li><li class="chip cut outline">GitHub Actions</li></ul></div>
-        <div class="tk-row" data-reveal><h3 class="label"><span class="c">07</span>Integrations</h3><ul><li class="chip cut outline">Chapa payments</li><li class="chip cut outline">AfroMessage SMS</li><li class="chip cut outline">Telegram bots</li><li class="chip cut outline">AI features</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">07</span>Integrations</h3><ul><li class="chip cut outline">Chapa payments</li><li class="chip cut outline">Stripe</li><li class="chip cut outline">AfroMessage SMS</li><li class="chip cut outline">Telegram bots</li><li class="chip cut outline">Gemini API</li></ul></div>
         <div class="tk-row" data-reveal><h3 class="label"><span class="c">08</span>Design</h3><ul><li class="chip cut outline">Figma</li><li class="chip cut outline">Illustrator</li><li class="chip cut outline">Photoshop</li></ul></div>
       </div>
     </div>
@@ -512,45 +527,135 @@ main, footer, .site-head { position: relative; z-index: 1; }
       </header>
 
       <div class="cases">
-        <!-- 1 -->
+        <!-- 1: Ethio Heran -->
         <article class="case">
           <div class="cover cut" data-reveal>
             <div class="ground"></div>
-            <p class="tag label"><span lang="am">፩</span><span>Staff panel</span></p>
-            <div class="sk"><div class="device browser cut"><div class="big">520+</div><p class="small">Pest tests running in GitHub Actions on every push</p></div></div>
+            <p class="tag label"><span lang="am">፩</span><span>Operations platform</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">6 roles</div><p class="small">parents, tutors, HR, supervisors, accountants and management in one system</p></div></div>
+            <img class="shot" src="images/ethio-heran.png" alt="Ethio Heran operations platform admin panel" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2025 to now / Operations platform</span><span class="live">Live</span></p>
+            <h3 class="display">Ethio Heran tutoring platform</h3>
+            <p class="role label">Ethio-Heran PLC, lead software engineer</p>
+            <p class="what">Runs a home-tutoring company end to end: hiring tutors, scheduling, attendance, parent billing, payroll and staff exits. It replaces spreadsheets, paper forms and phone calls spread across departments with one system built for Ethiopia, including the Ethiopian calendar and bilingual SMS.</p>
+            <dl class="facts">
+              <div><dt>3</dt><dd>automatic retries per message, separating temporary failures from permanent ones</dd></div>
+              <div><dt>68</dt><dd>authorization policies deciding who can see and change what</dd></div>
+              <div><dt>2 h</dt><dd>maximum before a crashed scheduled job’s lock clears and it runs again</dd></div>
+            </dl>
+            <ul class="tags label"><li class="cut outline">Laravel 12</li><li class="cut outline">Filament 3</li><li class="cut outline">Livewire</li><li class="cut outline">MySQL</li><li class="cut outline">Gemini API</li><li class="cut outline">Telegram Bot API</li><li class="cut outline">SMS gateway</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <h4 class="detail-h label">The problem</h4>
+                <p class="detail-p">A tutoring business runs on hundreds of small events: sessions held, reports submitted, payments collected, tutors hired or leaving. Each one affects money or a family’s experience, and each belongs to a different department with different access rights. Done by hand, attendance gets approved late, pay is miscalculated and reports go missing.</p>
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="Request flow"><li>Filament panels</li><li>Livewire</li><li>Service classes</li><li>Eloquent</li><li>MySQL</li></ol>
+                <ul class="detail">
+                  <li>Each role works in Filament admin screens built on Livewire, so every click is a server round-trip with no separate front-end API to keep in sync.</li>
+                  <li>Screens stay thin and call service classes that hold the business rules, which read and write MySQL through Eloquent inside database transactions.</li>
+                  <li>A scheduler running on Addis Ababa time drives the background work: attendance gap checks, report and payment reminders, finance reports and the messaging outbox.</li>
+                  <li>The outbox is a database table. A cron job sends its messages through the SMS gateway, email and the Telegram Bot API within a fixed time budget and records delivery per recipient. Question papers come from the Gemini API, falling back across models when one is busy.</li>
+                </ul>
+                <h4 class="detail-h label">Key decisions</h4>
+                <ul class="detail">
+                  <li>Ledgers rebuild from source records, so attendance approved late still reaches billing and pay, and corrections are new entries that keep history auditable.</li>
+                  <li>Access is checked three ways: role permissions, a policy per resource, and configurable rules for who may message whom.</li>
+                </ul>
+                <p class="links label"><a href="https://ethioherantutor.com">ethioherantutor.com</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 2: Tourism platform -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፪</span><span>Multi-tenant</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">≤ 4</div><p class="small">database queries per tour listing page, whatever the catalogue size</p></div></div>
+            <img class="shot" src="images/tourism-platform.png" alt="One of the tour brand sites" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2025 to now / Multi-tenant platform</span><span>Team project</span></p>
+            <h3 class="display">Tourism and commerce platform</h3>
+            <p class="role label">Adulis Media, full-stack developer (remote)</p>
+            <p class="what">Small travel and art brands usually pay for a separate website, admin panel and booking process each, and track seats and payments by hand. This platform gives five Ethiopian tour and art brands their own domain, design and content on one system, where customers book tours, pay online and chat with staff.</p>
+            <dl class="facts">
+              <div><dt>≤ 4</dt><dd>queries per listing page, held there by a regression test</dd></div>
+              <div><dt>15</dt><dd>manual release steps replaced by an automatic deploy on every push</dd></div>
+              <div><dt>1.9 KB</dt><dd>live chat loader; the full panel loads only when opened</dd></div>
+            </dl>
+            <ul class="tags label"><li class="cut outline">Laravel 13</li><li class="cut outline">Livewire 4</li><li class="cut outline">Filament 5</li><li class="cut outline">Alpine.js</li><li class="cut outline">Tailwind 4</li><li class="cut outline">MySQL</li><li class="cut outline">Redis</li><li class="cut outline">Stripe</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <h4 class="detail-h label">The problem</h4>
+                <p class="detail-p">Running a separate site for every brand multiplies hosting, fixes and admin work. Adding a brand here is configuration and theming, not a new build, and every brand shares the same booking, payment and admin tools.</p>
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="Request flow"><li>Blade + Alpine.js</li><li>Brand middleware</li><li>Service layer</li><li>Eloquent + global scopes</li><li>MySQL + Redis</li></ol>
+                <ul class="detail">
+                  <li>Pages are server-rendered with Blade and work without JavaScript; Alpine.js adds interactivity on top. Staff use a Filament and Livewire admin.</li>
+                  <li>Each request first passes middleware that identifies the brand from the hostname. A theme manager routes it to that brand’s handler, which calls a service layer over MySQL, with Redis for caching.</li>
+                  <li>Global query scopes add the brand filter to every query, so no developer can forget it. Queries return no rows without a brand, and saves are validated too.</li>
+                  <li>Payments are server-authoritative: the browser goes to Stripe Checkout, but only a signature-verified, idempotent webhook with row-level locking can mark money as received, so each payment counts once.</li>
+                </ul>
+                <h4 class="detail-h label">How the numbers were reached</h4>
+                <ul class="detail">
+                  <li>Tour cards used to look up their data one by one. Batched loading keeps the listing at a constant 4 or fewer queries, and a test fails if that number grows.</li>
+                  <li>Every push to main runs migrations, asset builds, cache warm-up, service reloads and queue restarts automatically.</li>
+                </ul>
+                <p class="links label"><a href="https://dejenehodes.com">dejenehodes.com</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 3: Gym platform -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፫</span><span>Staff panel</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">1 API</div><p class="small">serving both the staff panel and the member app</p></div></div>
             <img class="shot" src="images/gym-platform.png" alt="Staff panel of the gym management platform" loading="lazy" onerror="this.remove()">
           </div>
           <div class="info" data-reveal>
             <p class="kicker label"><span>2026 / SaaS back-end</span></p>
             <h3 class="display">Gym management platform</h3>
             <p class="role label">Freelance, back-end and staff panel</p>
-            <p class="what">A multi-tenant back-end for gyms with many branches. One versioned REST API serves both the front-desk staff panel and the member app.</p>
-            <ul class="tags label"><li class="cut outline">Laravel 13</li><li class="cut outline">Filament 5</li><li class="cut outline">PostgreSQL</li><li class="cut outline">Docker</li><li class="cut outline">Chapa</li></ul>
+            <p class="what">Gyms with several branches often track members, renewals and payments in notebooks or separate tools. This SaaS lets many gyms and branches run memberships, payments and check-ins from one platform, with each gym paid through its own Chapa account.</p>
+            <dl class="facts">
+              <div><dt>520+</dt><dd>automated tests run in CI on every push, with static analysis and code style checks</dd></div>
+              <div><dt>46</dt><dd>versioned API routes shared by two clients</dd></div>
+              <div><dt>19</dt><dd>architecture decision records documenting the design</dd></div>
+            </dl>
+            <ul class="tags label"><li class="cut outline">Laravel 13</li><li class="cut outline">Filament 5</li><li class="cut outline">PostgreSQL</li><li class="cut outline">Docker</li><li class="cut outline">Chapa</li><li class="cut outline">GitHub Actions</li></ul>
             <details>
               <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
               <div class="detail-wrap">
+                <h4 class="detail-h label">The problem</h4>
+                <p class="detail-p">Front-desk staff need to register members, sell plans and check people in quickly, while members want to renew and pay from their phone. Each gym must only ever see its own members and money.</p>
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="Request flow"><li>Staff panel / Flutter app</li><li>REST API v1 + Sanctum</li><li>Services</li><li>PostgreSQL</li></ol>
                 <ul class="detail">
-                  <li>Each gym’s data is isolated with organization scoping and composite foreign keys, behind Sanctum-authenticated endpoints.</li>
-                  <li>Plans and memberships with freezes, discounts, branch-only plans, visit packs and opening hours. Payments, refunds, voids and receipts, with money stored as integer minor units.</li>
-                  <li>Online payments through each gym’s own Chapa account, confirmed by webhook. SMS sign-in codes, renewal reminders and announcements through AfroMessage.</li>
-                  <li>A Filament staff panel for the front desk: register members, sell memberships, take payments and check people in with rotating QR codes.</li>
+                  <li>Two front-ends share one versioned REST API: a Filament staff panel for the front desk and the Volt Flutter app for members. Both authenticate with Sanctum tokens.</li>
+                  <li>Requests are scoped to the member’s gym and stored in PostgreSQL, where composite foreign keys stop records from linking across gyms.</li>
+                  <li>Chapa sends payment confirmations to a webhook, which activates the membership. AfroMessage delivers SMS sign-in codes, renewal reminders and announcements.</li>
+                  <li>The whole stack runs in Docker, and GitHub Actions runs the Pest tests, Larastan and Pint on every push.</li>
                 </ul>
-                <dl class="facts">
-                  <div><dt>520+</dt><dd>Pest tests, with Larastan and Pint in CI</dd></div>
-                  <div><dt>19</dt><dd>architecture decision records</dd></div>
-                  <div><dt>124</dt><dd>of the project’s 127 commits written by me</dd></div>
-                </dl>
                 <p class="links label"><a href="https://github.com/azabla/gym-platform">Source on GitHub</a></p>
               </div>
             </details>
           </div>
         </article>
 
-        <!-- 2 -->
+        <!-- 4: Volt -->
         <article class="case">
           <div class="cover cut" data-reveal>
             <div class="ground"></div>
-            <p class="tag label"><span lang="am">፪</span><span>Check-in pass</span></p>
+            <p class="tag label"><span lang="am">፬</span><span>Check-in pass</span></p>
             <div class="sk"><div class="device phone cut"><span class="mini-label"><span>Volt</span><span>Active</span></span><div class="qr" id="qr" aria-hidden="true"></div><span class="mini-label"><span>Rotates every 30 s</span></span><div class="bar"><i style="width:62%"></i></div></div></div>
             <img class="shot" src="images/volt.png" alt="Volt member app check-in screen" loading="lazy" onerror="this.remove()">
           </div>
@@ -558,14 +663,22 @@ main, footer, .site-head { position: relative; z-index: 1; }
             <p class="kicker label"><span>2026 / Mobile app</span></p>
             <h3 class="display">Volt member app</h3>
             <p class="role label">Freelance, Flutter</p>
-            <p class="what">The Android-first app for the gym platform. Members sign in with a one-time code, check their membership, buy plans through Chapa checkout and see their payment history.</p>
-            <ul class="tags label"><li class="cut outline">Flutter</li><li class="cut outline">Riverpod</li><li class="cut outline">Dio</li><li class="cut outline">go_router</li></ul>
+            <p class="what">Gym members usually have to visit the front desk to renew or prove their membership. Volt lets them sign in with an SMS code, buy plans through Chapa and check in with a rotating QR pass, in Amharic and English.</p>
+            <dl class="facts">
+              <div><dt>84</dt><dd>automated tests across 17 screens</dd></div>
+              <div><dt>3</dt><dd>build flavors: dev, staging and production</dd></div>
+            </dl>
+            <ul class="tags label"><li class="cut outline">Flutter</li><li class="cut outline">Riverpod</li><li class="cut outline">Dio</li><li class="cut outline">go_router</li><li class="cut outline">Chapa</li></ul>
             <details>
               <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
               <div class="detail-wrap">
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="Request flow"><li>Flutter UI</li><li>Riverpod</li><li>Dio + token</li><li>Gym REST API</li><li>PostgreSQL</li></ol>
                 <ul class="detail">
-                  <li>A rotating QR check-in pass that brightens the screen at the door, plus visit history. Available in Amharic and English.</li>
-                  <li>Dev, staging and production flavors, and a built-in fake back-end that follows the API contract, so the app was built and tested before the API went live.</li>
+                  <li>Screens read state from Riverpod providers. Providers call repositories that use Dio to reach the gym platform’s REST API, attaching the Sanctum token issued after SMS sign-in.</li>
+                  <li>Buying a plan opens Chapa checkout. The server confirms the payment by webhook, and the app refreshes the membership from the API.</li>
+                  <li>The check-in pass rotates its QR code and brightens the screen at the door; the staff panel scans it against the same API.</li>
+                  <li>A built-in fake back-end implements the same API contract, so the app was built and tested before the live API existed, then switched over by flavor.</li>
                 </ul>
                 <p class="links label"><a href="https://github.com/ads-tres/Volt-Fitness">Source on GitHub</a></p>
               </div>
@@ -573,11 +686,11 @@ main, footer, .site-head { position: relative; z-index: 1; }
           </div>
         </article>
 
-        <!-- 3 -->
+        <!-- 5: Kiray -->
         <article class="case">
           <div class="cover cut" data-reveal>
             <div class="ground"></div>
-            <p class="tag label"><span lang="am">፫</span><span>Monthly rent</span></p>
+            <p class="tag label"><span lang="am">፭</span><span>Monthly rent</span></p>
             <div class="sk"><div class="device phone cut">
               <span class="mini-label"><span>ኪራይ</span><span>This month</span></span>
               <span class="mini-label" style="margin-top:.5rem"><span>Due</span></span><div class="bar"><i style="width:100%"></i></div>
@@ -591,99 +704,55 @@ main, footer, .site-head { position: relative; z-index: 1; }
             <p class="kicker label"><span>2026 / API and mobile app</span><span class="live">In progress</span></p>
             <h3 class="display">Kiray</h3>
             <p class="role label">Freelance, back-end and Flutter app</p>
-            <p class="what">Rent and maintenance tracking for Addis Ababa landlords with 2 to 20 units: properties, tenants, leases, rent and repairs.</p>
-            <ul class="tags label"><li class="cut outline">Laravel 13 API</li><li class="cut outline">Flutter</li><li class="cut outline">PostgreSQL</li><li class="cut outline">SMS sign-in</li></ul>
+            <p class="what">Small Addis Ababa landlords with 2 to 20 units track rent, leases and repairs in notebooks and phone calls. Kiray puts it in one Amharic and English app, with leases that follow the city’s rent directive.</p>
+            <dl class="facts">
+              <div><dt>76</dt><dd>automated tests (53 API, 23 app) covering the rent-cap rule, data isolation and sign-in</dd></div>
+              <div><dt>13</dt><dd>API endpoints serving 11 app screens</dd></div>
+            </dl>
+            <ul class="tags label"><li class="cut outline">Laravel 13 API</li><li class="cut outline">Flutter</li><li class="cut outline">PostgreSQL</li><li class="cut outline">Sanctum</li></ul>
             <details>
               <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
               <div class="detail-wrap">
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="Request flow"><li>Flutter app</li><li>Dio + Sanctum</li><li>Laravel REST API</li><li>PostgreSQL</li></ol>
                 <ul class="detail">
-                  <li>Phone sign-in with hashed, rate-limited SMS codes, per-landlord data isolation, and encrypted tenant ID numbers with consent records to meet Ethiopia’s data-protection law.</li>
-                  <li>Leases follow the Addis Ababa rental directive: a two-year minimum, a yearly rent-cap check and late flags.</li>
-                  <li>A Flutter app in Amharic and English with a monthly view of rent due, collected and outstanding, and a bilingual landing page with a waitlist.</li>
+                  <li>Landlords sign in with an SMS one-time code. The code is hashed and rate-limited, and a valid one returns a Sanctum token.</li>
+                  <li>The Flutter app (Riverpod, Dio, go_router) sends that token with every request to the Laravel API, which scopes every query to the signed-in landlord.</li>
+                  <li>PostgreSQL stores tenant ID numbers encrypted, with consent records, to meet Ethiopia’s data-protection law.</li>
+                  <li>The API enforces the rental directive itself: a two-year minimum lease, a yearly rent-cap check and late flags, so the rules hold whatever client calls it.</li>
                 </ul>
               </div>
             </details>
           </div>
         </article>
 
-        <!-- 4 -->
-        <article class="case">
-          <div class="cover cut" data-reveal>
-            <div class="ground"></div>
-            <p class="tag label"><span lang="am">፬</span><span>ERP</span></p>
-            <div class="sk"><div class="device browser cut"><div class="big">80+</div><p class="small">modules across academics, finance, HR and operations, with 18 roles</p></div></div>
-            <img class="shot" src="images/erp.png" alt="Ethio-Heran ERP dashboard" loading="lazy" onerror="this.remove()">
-          </div>
-          <div class="info" data-reveal>
-            <p class="kicker label"><span>2024 to now / ERP</span></p>
-            <h3 class="display">Tutoring company ERP</h3>
-            <p class="role label">Ethio-Heran PLC, full-stack developer</p>
-            <p class="what">The system Ethio-Heran runs on, from hiring tutors and scheduling exams to payroll and real-profit reports.</p>
-            <ul class="tags label"><li class="cut outline">Laravel</li><li class="cut outline">Filament</li><li class="cut outline">AI features</li><li class="cut outline">SMS</li><li class="cut outline">Telegram</li></ul>
-            <details>
-              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
-              <div class="detail-wrap">
-                <ul class="detail">
-                  <li>Academics: an AI question bank built from saved notes, scheduled exam papers, results, report cards and impact tracking.</li>
-                  <li>Finance: payments, credit requests, tutor payroll, expenses, income against salary for each tutor and staff member, and real-profit summaries.</li>
-                  <li>HR: tutor hiring from application through exam, interview, training and contract, plus KPIs, audits, penalties and a seven-step exit clearance.</li>
-                  <li>Operations: call-center leads, attendance and report gap auditors, a task board, message rules and SMS and Telegram reports.</li>
-                </ul>
-                <p class="links label"><a href="https://ethioherantutor.com">ethioherantutor.com</a></p>
-              </div>
-            </details>
-          </div>
-        </article>
-
-        <!-- 5 -->
-        <article class="case">
-          <div class="cover cut" data-reveal>
-            <div class="ground"></div>
-            <p class="tag label"><span lang="am">፭</span><span>Multisite</span></p>
-            <div class="sk"><div class="device browser cut"><div class="big">4 sites</div><p class="small">one Laravel codebase and one set of tables</p></div></div>
-            <img class="shot" src="images/multisite.png" alt="One of the Adulis Media sites" loading="lazy" onerror="this.remove()">
-          </div>
-          <div class="info" data-reveal>
-            <p class="kicker label"><span>2025 to now / Multisite</span></p>
-            <h3 class="display">Tourism and art multisite</h3>
-            <p class="role label">Adulis Media, remote</p>
-            <p class="what">Four branded sites for tours, Ethiopian art sales and trip consultation that share one codebase: Dejene Ethiopia Tours, Group Tour Ethiopia, Adulis Ethiopian Art and Ethiopia Trip Planner.</p>
-            <ul class="tags label"><li class="cut outline">Laravel</li><li class="cut outline">Multisite</li><li class="cut outline">SEO</li><li class="cut outline">Hosting</li></ul>
-            <details>
-              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
-              <div class="detail-wrap">
-                <ul class="detail">
-                  <li>Each site keeps its own branding while sharing one codebase and one set of tables, so a fix ships to all four at once.</li>
-                  <li>I also handle SEO and hosting for all four sites.</li>
-                </ul>
-                <p class="links label"><a href="https://dejenehodes.com">dejenehodes.com</a></p>
-              </div>
-            </details>
-          </div>
-        </article>
-
-        <!-- 6 -->
+        <!-- 6: Flutter designs -->
         <article class="case">
           <div class="cover cut" data-reveal>
             <div class="ground"></div>
             <p class="tag label"><span lang="am">፮</span><span>App designs</span></p>
-            <div class="sk"><div class="device phone cut"><span class="mini-label"><span>Flutter</span><span>2025</span></span><div class="big" style="margin-top:.4rem">4 apps</div><div class="apps"><span>SHAD</span><span>Equb</span><span>ServerDashboard</span><span>Prediction market</span></div></div></div>
+            <div class="sk"><div class="device phone cut"><span class="mini-label"><span>Flutter</span><span>2025</span></span><div class="big" style="margin-top:.4rem">52 screens</div><div class="apps"><span>SHAD</span><span>Equb</span><span>ServerDashboard</span><span>Prediction market</span></div></div></div>
             <img class="shot" src="images/flutter-apps.png" alt="Flutter app designs" loading="lazy" onerror="this.remove()">
           </div>
           <div class="info" data-reveal>
             <p class="kicker label"><span>2025 / Mobile app designs</span></p>
             <h3 class="display">Flutter app designs</h3>
             <p class="role label">Personal projects</p>
-            <p class="what">Four complete Flutter apps, from e-commerce to Ethiopian rotating savings groups.</p>
+            <p class="what">Four complete app interfaces: SHAD for online shopping, Equb for Ethiopian rotating savings groups, ServerDashboard for server monitoring and a prediction-market app.</p>
+            <dl class="facts">
+              <div><dt>52</dt><dd>screens built from reusable widgets</dd></div>
+              <div><dt>26</dt><dd>screens in SHAD’s shopping, checkout and account flow</dd></div>
+            </dl>
             <ul class="tags label"><li class="cut outline">Flutter</li><li class="cut outline">Dart</li><li class="cut outline">fl_chart</li><li class="cut outline">go_router</li></ul>
             <details>
               <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
               <div class="detail-wrap">
+                <h4 class="detail-h label">How it fits together</h4>
+                <ol class="flow label" aria-label="App structure"><li>Screens</li><li>Reusable widgets</li><li>go_router</li><li>Mock data layer</li></ol>
                 <ul class="detail">
-                  <li>SHAD: e-commerce with catalog, product details, wishlist, cart, checkout, email-verified onboarding and 12 account screens.</li>
-                  <li>Equb: for Ethiopian rotating savings groups. Create and join groups, track members and contributions, and confirm payments.</li>
-                  <li>ServerDashboard: server monitoring with performance charts, status and uptime cards, alerts and token-based connection.</li>
-                  <li>Prediction market: markets by category, market details, a portfolio and full sign-up, verification and password reset.</li>
+                  <li>These are front-end builds. Screens read from a local mock data layer shaped like API responses, so a real back-end can replace it without changing the UI.</li>
+                  <li>go_router handles navigation, and fl_chart draws the ServerDashboard performance charts.</li>
+                  <li>Equb covers creating and joining groups, tracking members and contributions, and confirming payments. The prediction market has categories, market details, a portfolio and full sign-up, verification and password reset.</li>
                 </ul>
                 <p class="links label"><a href="https://github.com/ads-tres">More on GitHub</a></p>
               </div>
@@ -713,18 +782,19 @@ main, footer, .site-head { position: relative; z-index: 1; }
           <summary>
             <span class="n" aria-hidden="true">፩</span>
             <span class="co">Ethio-Heran PLC</span>
-            <span class="ro">Full-stack developer</span>
+            <span class="ro">Lead software engineer</span>
             <span class="pe label">Oct 2024 to now</span>
             <span class="st st-d on label"><i></i>On duty</span>
             <span class="pm" aria-hidden="true">+</span>
-            <span class="mob label"><span>Full-stack developer</span><span>Oct 2024 to now</span><span class="st on"><i></i>On duty</span></span>
+            <span class="mob label"><span>Lead software engineer</span><span>Oct 2024 to now</span><span class="st on"><i></i>On duty</span></span>
           </summary>
           <div class="body"><div>
             <p class="when label">Oct 2024 to now / Full-time</p>
-            <h4>Full-stack developer</h4>
+            <h4>Lead software engineer</h4>
             <ul class="detail">
-              <li>Built the company’s ERP in Laravel and Filament: 80+ modules across academics, finance, HR and operations, with 18 roles.</li>
-              <li>AI question bank, exam scheduling, report cards, tutor payroll, real-profit summaries, a hiring pipeline and SMS and Telegram reports.</li>
+              <li>Lead developer of the operations platform that runs the business end to end, replacing manual hiring, attendance, billing and payroll.</li>
+              <li>Laravel 12 and Filament 3 on MySQL: 74 modules, 95 models and 68 policies, with Gemini AI and an SMS, email and Telegram outbox.</li>
+              <li>Scheduled jobs for attendance gap checks, reminders, finance reports and AI exam papers cut manual tracking.</li>
             </ul>
             <p class="links label"><a href="https://ethioherantutor.com">Visit site</a></p>
           </div></div>
@@ -744,8 +814,8 @@ main, footer, .site-head { position: relative; z-index: 1; }
             <p class="when label">Mar 2025 to now / Remote</p>
             <h4>Full-stack developer (Laravel)</h4>
             <ul class="detail">
-              <li>Built a Laravel multisite: branded sites for tours, Ethiopian art sales and trip consultation sharing one codebase and tables.</li>
-              <li>Dejene Ethiopia Tours, Group Tour Ethiopia, Adulis Ethiopian Art and Ethiopia Trip Planner, including SEO and hosting.</li>
+              <li>Co-built a multi-tenant platform running five tour and art brands on one codebase: booking, Stripe payments, admin, blog and live chat.</li>
+              <li>Laravel 13, Filament 5 and Alpine.js on MySQL and Redis, with hostname resolution and global scopes isolating each brand’s data.</li>
             </ul>
             <p class="links label"><a href="https://dejenehodes.com">Visit site</a></p>
           </div></div>
@@ -785,7 +855,8 @@ main, footer, .site-head { position: relative; z-index: 1; }
             <p class="when label">Nov 2025 to Apr 2026</p>
             <h4>Full-stack developer</h4>
             <ul class="detail">
-              <li>Gym system in Laravel and Filament: members, packages, add-ons, payments, expenses and Shield roles, starting from a Figma prototype.</li>
+              <li>Gym management system to track members, packages, add-ons, payments and expenses in one place, built from my Figma prototype.</li>
+              <li>Laravel and Filament 4 (Livewire) admin with Shield roles, bulk payment actions and an Ethiopian calendar date picker, across 7 admin modules.</li>
             </ul>
           </div></div>
         </details>
