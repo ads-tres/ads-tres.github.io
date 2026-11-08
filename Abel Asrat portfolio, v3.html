@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abel Asrat, full-stack and mobile developer</title>
+<meta name="description" content="Abel Asrat is a full-stack and mobile developer in Addis Ababa building ERPs, multi-tenant SaaS back-ends and Amharic–English Flutter apps with Laravel, Filament and Flutter.">
+<meta name="theme-color" content="#0F0E13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@500&family=Noto+Sans+Ethiopic:wght@400;600;700&family=Tomorrow:wght@500;600&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+    document.documentElement.classList.add('js');
+  })();
+</script>
+<style>
+/* =========================================================
+   Tokens
+   ========================================================= */
+:root {
+  --display: "Tomorrow", "Geist", system-ui, sans-serif;
+  --body: "Geist", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, monospace;
+  --geez: "Noto Sans Ethiopic", serif;
+  --gutter: clamp(1rem, 2.4vw, 2rem);
+  --hud-h: 4.5rem;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --flood: #5B3FC0;
+  --flood-ink: #F7F5FF;
+  --night: #120A26;
+  --night-ink: #F1EEFA;
+}
+[data-theme="dark"] {
+  --bg: #0F0E13;
+  --raised: #17151D;
+  --fg: #ECEAF2;
+  --muted: #9C97AA;
+  --line: #2A2733;
+  --signal: #9D7FF5;
+  --signal-text: #B49CFF;
+  --signal-ink: #0F0E13;
+  --ok: #6FCF97;
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --bg: #F4F3F7;
+  --raised: #FFFFFF;
+  --fg: #15131B;
+  --muted: #5E5A6B;
+  --line: #D9D6E0;
+  --signal: #6A4BC4;
+  --signal-text: #5A3CB5;
+  --signal-ink: #FFFFFF;
+  --ok: #2E7D52;
+  color-scheme: light;
+}
+/* Sections that flip to the accent or to night colours */
+.flood {
+  background: var(--flood); color: var(--flood-ink);
+  --fg: var(--flood-ink); --muted: color-mix(in oklch, var(--flood-ink) 72%, transparent);
+  --line: color-mix(in oklch, var(--flood-ink) 24%, transparent);
+  --signal: var(--flood-ink); --signal-text: var(--flood-ink); --signal-ink: var(--flood);
+  --raised: color-mix(in oklch, var(--flood-ink) 8%, var(--flood));
+}
+.night {
+  background: linear-gradient(180deg, var(--night), #07040F); color: var(--night-ink);
+  --fg: var(--night-ink); --muted: #A9A2BF; --line: #FFFFFF1A;
+  --signal: #9D7FF5; --signal-text: #B49CFF; --signal-ink: #0F0E13; --ok: #6FCF97;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--hud-h); }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--signal); color: var(--signal-ink); }
+h1, h2, h3, h4, p, ul, ol, dl, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--signal-text); outline-offset: 3px; }
+[lang="am"] { font-family: var(--geez); letter-spacing: 0; text-transform: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.shell { padding-inline: var(--gutter); max-width: 100rem; margin-inline: auto; }
+.label { font-family: var(--mono); font-size: .6875rem; line-height: 1rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+.display { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: -.01em; }
+.muted { color: var(--muted); }
+.accent { color: var(--signal-text); }
+
+/* Chamfered corners, like a cut card */
+.cut { clip-path: polygon(0 0, calc(100% - var(--cut, 10px)) 0, 100% var(--cut, 10px), 100% 100%, var(--cut, 10px) 100%, 0 calc(100% - var(--cut, 10px))); }
+/* Hairline box drawn with backgrounds so it survives clip-path */
+.outline {
+  --l: color-mix(in oklch, currentColor 38%, transparent);
+  background:
+    linear-gradient(var(--l), var(--l)) top / 100% 1px no-repeat,
+    linear-gradient(var(--l), var(--l)) bottom / 100% 1px no-repeat,
+    linear-gradient(var(--l), var(--l)) left / 1px 100% no-repeat,
+    linear-gradient(var(--l), var(--l)) right / 1px 100% no-repeat;
+}
+.outline:hover { --l: currentColor; }
+.outline:focus-visible, .cut:focus-visible { outline-offset: -5px; }
+/* Corner ticks */
+.ticks {
+  --t: 10px; --tc: var(--signal);
+  background:
+    linear-gradient(var(--tc), var(--tc)) top left / var(--t) 1px, linear-gradient(var(--tc), var(--tc)) top left / 1px var(--t),
+    linear-gradient(var(--tc), var(--tc)) top right / var(--t) 1px, linear-gradient(var(--tc), var(--tc)) top right / 1px var(--t),
+    linear-gradient(var(--tc), var(--tc)) bottom left / var(--t) 1px, linear-gradient(var(--tc), var(--tc)) bottom left / 1px var(--t),
+    linear-gradient(var(--tc), var(--tc)) bottom right / var(--t) 1px, linear-gradient(var(--tc), var(--tc)) bottom right / 1px var(--t);
+  background-repeat: no-repeat;
+}
+
+/* Background column grid */
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  padding-inline: var(--gutter); max-width: 100rem; margin-inline: auto;
+  background-image: repeating-linear-gradient(90deg, color-mix(in oklch, var(--fg) 3%, transparent) 0 1px, transparent 1px 10px);
+}
+.grid-bg span { border-left: 1px solid color-mix(in oklch, var(--fg) 9%, transparent); }
+.grid-bg span:last-child { border-right: 1px solid color-mix(in oklch, var(--fg) 9%, transparent); }
+.grid-bg span:nth-child(n+3) { display: none; }
+@media (min-width: 768px) { .grid-bg { --cols: 4; } .grid-bg span:nth-child(-n+4) { display: block; } }
+@media (min-width: 1280px) { .grid-bg { --cols: 6; } .grid-bg span { display: block; } }
+main, footer, .site-head { position: relative; z-index: 1; }
+
+/* =========================================================
+   Header and menu
+   ========================================================= */
+.site-head { position: fixed; inset: 0 0 auto 0; z-index: 75; border-bottom: 1px solid transparent; transition: background-color .3s, border-color .3s; }
+.site-head.scrolled { background: color-mix(in oklch, var(--bg) 86%, transparent); backdrop-filter: blur(12px); border-bottom-color: var(--line); }
+.site-head .shell { height: var(--hud-h); display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; }
+@media (min-width: 768px) { .site-head .shell { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1280px) { .site-head .shell { grid-template-columns: repeat(6, 1fr); } }
+.brand { display: inline-flex; align-items: center; gap: .65rem; justify-self: start; }
+.brand .mark { --cut: 5px; width: 1.6rem; height: 1.6rem; display: grid; place-items: center; background: var(--signal); color: var(--signal-ink); font-family: var(--geez); font-size: .9rem; font-weight: 700; }
+.mode { display: none; justify-self: start; }
+@media (min-width: 768px) { .mode { display: inline-block; } }
+.head-status { display: none; }
+@media (min-width: 1280px) { .head-status { display: flex; grid-column: span 3; align-items: center; gap: .75rem; color: var(--muted); } }
+.head-status .dot { width: .45rem; height: .45rem; background: var(--ok); rotate: 45deg; }
+.menu-btn { --cut: 8px; justify-self: end; height: 2.5rem; padding: 0 1.25rem; grid-column: 2; }
+@media (min-width: 768px) { .menu-btn { grid-column: 4; } }
+@media (min-width: 1280px) { .menu-btn { grid-column: 6; } }
+
+.menu {
+  position: fixed; inset: 0; z-index: 70; background: var(--flood); color: var(--flood-ink);
+  visibility: hidden; opacity: 0; transition: opacity .35s var(--ease-out), visibility 0s .35s;
+  overflow-y: auto;
+}
+.menu.open { visibility: visible; opacity: 1; transition: opacity .35s var(--ease-out); }
+.menu .shell { min-height: 100%; display: grid; align-content: space-between; gap: 2.5rem; padding-top: calc(var(--hud-h) + 2rem); padding-bottom: 2rem; }
+.menu-links a { display: flex; align-items: baseline; gap: 1.25rem; padding: .35rem 0; border-bottom: 1px solid color-mix(in oklch, var(--flood-ink) 20%, transparent); }
+.menu-links .n { font-family: var(--geez); font-size: 1.4rem; opacity: .7; min-width: 2rem; }
+.menu-links .t { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(2.5rem, 8vw, 6.5rem); line-height: 1; transition: letter-spacing .4s var(--ease-out); }
+.menu-links a:hover .t, .menu-links a:focus-visible .t { letter-spacing: .04em; }
+.menu-foot { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.menu-foot p + p { margin-top: .25rem; }
+.menu.open ~ .site-head, .menu-open .site-head { color: var(--flood-ink); }
+.menu-open .site-head.scrolled { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
+.menu-open .brand .mark { background: var(--flood-ink); color: var(--flood); }
+.menu-open .head-status .dot { background: var(--flood-ink); }
+.menu-open .head-status, .menu-open .mode .muted { color: color-mix(in oklch, var(--flood-ink) 70%, transparent); }
+
+/* =========================================================
+   Hero
+   ========================================================= */
+.hero { padding-top: calc(var(--hud-h) + 2rem); padding-bottom: 4rem; }
+.stage { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 2rem; }
+.intro p.lead { font-size: 1.05rem; max-width: 30ch; margin-top: .75rem; }
+.since { color: var(--muted); }
+.since strong { color: var(--fg); font-weight: 500; }
+
+.fidel-card { --cut: 18px; position: relative; padding: 1.25rem; background: var(--raised); }
+.fidel-card .head, .fidel-card .foot { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); }
+.fidel-card .foot { margin-top: 1rem; }
+.fidel {
+  display: grid; grid-template-columns: auto repeat(7, minmax(0, 1fr)); gap: 2px; margin-top: 1rem;
+}
+.fidel .h { font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; color: var(--muted); text-align: center; padding: .2rem 0; }
+.fidel .r { font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; color: var(--muted); padding-right: .6rem; display: flex; align-items: center; }
+.fidel .c {
+  font-family: var(--geez); font-size: clamp(1.15rem, 2vw, 1.7rem); line-height: 1; aspect-ratio: 1;
+  display: grid; place-items: center; color: color-mix(in oklch, var(--fg) 34%, transparent);
+  background: color-mix(in oklch, var(--fg) 3%, transparent);
+  transition: color .35s, background-color .35s;
+}
+.fidel .c.on { color: var(--signal-ink); background: var(--signal); }
+.fidel .c.on b { font-weight: 700; }
+.spelled { margin-top: 1rem; display: flex; gap: .4rem; flex-wrap: wrap; align-items: baseline; }
+.spelled [lang="am"] { font-size: 1.5rem; font-weight: 700; color: var(--signal-text); }
+
+.name { display: flex; flex-direction: column; gap: 0; line-height: .86; font-size: min(calc(88vw / (5 * .72)), 7.5rem); order: -1; }
+.intro { order: 0; } .fidel-card { order: 1; } .since { order: 2; }
+.name span { display: block; }
+.name .w { overflow: clip; padding-top: .06em; }
+.name .w > span { transition: transform 1s var(--ease-out); }
+.js .name .w > span { transform: translateY(105%); }
+.ready .name .w > span { transform: none; }
+.ready .name .w:nth-child(2) > span { transition-delay: .1s; }
+
+@media (min-width: 1024px) {
+  .hero { padding-bottom: 0; }
+  .stage {
+    --card-w: clamp(320px, 30vw, 540px);
+    grid-template-columns: minmax(0, 1fr) var(--card-w) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    column-gap: var(--gutter); min-height: calc(100svh - var(--hud-h) - 2rem);
+  }
+  .intro { grid-area: 1 / 1; }
+  .since { grid-area: 1 / 3; text-align: right; justify-self: end; }
+  .fidel-card { grid-area: 1 / 2 / 4; align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 1rem; }
+  .name { grid-area: 3 / 1 / auto / -1; z-index: 2; flex-direction: row; justify-content: space-between; align-items: flex-end; gap: var(--gutter); line-height: .82; font-size: min(calc((50vw - var(--card-w) / 2 - 2 * var(--gutter)) / (5 * .66)), 24svh); padding-bottom: 1rem; }
+}
+
+/* Locator + manifesto */
+.manifesto { display: grid; gap: 2.5rem; padding: 5rem 0 6rem; }
+@media (min-width: 900px) { .manifesto { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); column-gap: 4rem; align-items: center; } }
+.locator { --cut: 14px; position: relative; padding: 1rem; background: var(--raised); }
+.locator svg { display: block; width: 100%; height: auto; }
+.locator .grat { stroke: color-mix(in oklch, var(--fg) 12%, transparent); stroke-width: 1; }
+.locator .axis { fill: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .08em; }
+.locator .cross { stroke: var(--signal); stroke-width: 1; stroke-dasharray: 3 3; }
+.marker { fill: var(--signal); }
+.pulse { fill: none; stroke: var(--signal); transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .pulse { animation: pulse 2.6s cubic-bezier(.2,.6,.3,1) infinite; }
+  @keyframes pulse { 0% { opacity: .8; transform: rotate(45deg) scale(1); } 100% { opacity: 0; transform: rotate(45deg) scale(3.4); } }
+}
+.locator .cap { display: grid; gap: .15rem; margin-top: .9rem; }
+.locator .cap [lang="am"] { font-size: 1rem; color: var(--fg); }
+.manifesto .text { font-size: clamp(1.25rem, 2.1vw, 2rem); line-height: 1.3; letter-spacing: -.01em; max-width: 36ch; }
+.manifesto .text .muted { color: var(--muted); }
+.cue { display: none; }
+@media (min-width: 1024px) { .cue { display: flex; flex-direction: column; align-items: center; gap: .5rem; color: var(--muted); padding-bottom: 1.5rem; } .cue i { width: 1px; height: 2.5rem; background: linear-gradient(var(--signal), transparent); } }
+
+/* =========================================================
+   Sections
+   ========================================================= */
+.band { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0; color: var(--muted); overflow: hidden; white-space: nowrap; }
+.band .chars { font-family: var(--geez); font-size: .95rem; letter-spacing: .5em; opacity: .55; overflow: hidden; flex: 1; mask-image: linear-gradient(90deg, #000 70%, transparent); }
+
+.sec { padding: 6rem 0 7rem; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 3.5rem; }
+.mega { font-size: clamp(3.25rem, 11vw, 9rem); line-height: .9; transition: letter-spacing .5s var(--ease-out); overflow-wrap: anywhere; }
+.mega:hover { letter-spacing: .03em; }
+.sec-head .am-word { display: block; font-size: 1rem; color: var(--muted); margin-bottom: .5rem; font-weight: 600; }
+.sec-head .meta { color: var(--muted); text-align: right; }
+.sec-head .meta b { color: var(--fg); font-weight: 500; }
+
+/* Toolkit */
+.toolkit { display: grid; gap: 0; }
+.tk-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem 2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+@media (min-width: 900px) { .tk-row { grid-template-columns: 14rem minmax(0, 1fr); align-items: baseline; } }
+.tk-row h3 { display: flex; gap: .6rem; align-items: baseline; color: var(--muted); }
+.tk-row h3 .c { color: var(--fg); }
+.tk-row ul { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { --cut: 7px; display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .8rem; font-weight: 500; font-size: .95rem; }
+
+/* Work */
+.cases { display: grid; gap: 5rem; }
+.case { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem var(--gutter); align-items: center; }
+@media (min-width: 1024px) {
+  .case { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .case .cover { grid-column: 1 / span 7; }
+  .case .info { grid-column: 8 / -1; }
+  .case:nth-child(even) .cover { grid-column: 6 / -1; order: 2; }
+  .case:nth-child(even) .info { grid-column: 1 / span 5; }
+}
+.cover { --cut: 16px; position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.cover .ground {
+  position: absolute; inset: 0;
+  background-color: color-mix(in oklch, var(--signal) 9%, var(--bg));
+  background-image:
+    repeating-linear-gradient(90deg, color-mix(in oklch, var(--fg) 6%, transparent) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(0deg, color-mix(in oklch, var(--fg) 6%, transparent) 0 1px, transparent 1px 24px);
+}
+.cover .tag { position: absolute; left: 1rem; top: .9rem; z-index: 2; color: var(--muted); display: flex; gap: .75rem; }
+.cover .tag [lang="am"] { color: var(--signal-text); font-size: .9rem; }
+.cover .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; z-index: 3; }
+.cover .sk { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; }
+.device { position: relative; background: var(--raised); box-shadow: 0 30px 60px -30px rgba(0,0,0,.55); }
+.device.browser { --cut: 12px; width: 78%; aspect-ratio: 16 / 10; padding: 2.25rem 2rem 1.5rem; display: flex; flex-direction: column; justify-content: center; }
+.device.browser::before { content: ""; position: absolute; left: 1rem; top: .9rem; width: .4rem; height: .4rem; background: var(--line); box-shadow: .7rem 0 0 var(--line), 1.4rem 0 0 var(--line); }
+.device.phone { --cut: 14px; height: 84%; aspect-ratio: 9 / 18; padding: 1rem .85rem; display: flex; flex-direction: column; justify-content: center; gap: .55rem; }
+.sk .big { font-family: var(--display); font-weight: 600; font-size: clamp(2.6rem, 6vw, 5rem); line-height: .9; color: var(--signal-text); }
+.sk .small { color: var(--muted); font-size: .9rem; line-height: 1.35; margin-top: .6rem; max-width: 26ch; }
+.phone .big { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+.phone .small { font-size: .78rem; margin-top: 0; }
+.mini-label { font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+.bar { height: .45rem; background: var(--line); }
+.bar i { display: block; height: 100%; background: var(--signal); }
+.qr { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; width: 100%; aspect-ratio: 1; }
+.qr i { background: var(--fg); }
+.qr i.off { background: transparent; }
+.apps { display: flex; flex-wrap: wrap; gap: .3rem; }
+.apps span { font-family: var(--mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .4rem; background: color-mix(in oklch, var(--signal) 18%, transparent); }
+
+.info .kicker { color: var(--muted); display: flex; flex-wrap: wrap; gap: .4rem 1rem; }
+.info .kicker .live { color: var(--ok); }
+.info h3 { margin-top: 1rem; font-size: clamp(2.25rem, 4.2vw, 4.25rem); line-height: .9; overflow-wrap: anywhere; }
+.info .role { margin-top: .9rem; color: var(--signal-text); }
+.info .what { margin-top: 1rem; color: var(--muted); max-width: 46ch; }
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.25rem; }
+.tags li { --cut: 6px; padding: .3rem .6rem; color: var(--muted); }
+.case details { margin-top: 1.5rem; }
+.case summary { --cut: 8px; list-style: none; display: inline-flex; align-items: center; gap: .75rem; height: 2.6rem; padding: 0 1.1rem; }
+.case summary::-webkit-details-marker { display: none; }
+.case summary .pm { display: inline-block; transition: rotate .3s var(--ease-out); color: var(--signal-text); }
+.case details[open] summary .pm { rotate: 45deg; }
+.case details .open-t { display: none; }
+.case details[open] .open-t { display: inline; }
+.case details[open] .closed-t { display: none; }
+.detail { margin-top: 1.25rem; max-width: 52ch; }
+.detail li { position: relative; padding-left: 1.25rem; color: var(--muted); }
+.detail li + li { margin-top: .6rem; }
+.detail li::before { content: ""; position: absolute; left: 0; top: .62em; width: .4rem; height: .4rem; background: var(--signal); rotate: 45deg; }
+.facts { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.facts dt { font-family: var(--display); font-weight: 600; font-size: 2.25rem; line-height: 1; color: var(--signal-text); }
+.facts dd { margin: .35rem 0 0; color: var(--muted); max-width: 12rem; font-size: .9rem; line-height: 1.35; }
+.links { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1.25rem; }
+.links a { border-bottom: 1px solid var(--signal); padding-bottom: .1rem; }
+.links a:hover { color: var(--signal-text); }
+@media (prefers-reduced-motion: no-preference) {
+  .case details[open] .detail-wrap { animation: drop .4s var(--ease-out); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-.5rem); } to { opacity: 1; transform: none; } }
+}
+
+/* Experience */
+.ex-head, .ex summary { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: .25rem 1rem; align-items: center; }
+@media (min-width: 900px) {
+  .ex-head, .ex summary { grid-template-columns: 3.5rem minmax(0, 1.5fr) minmax(0, 1.2fr) 11rem 7rem 1.5rem; }
+}
+.ex-head { color: var(--muted); padding-bottom: .9rem; border-bottom: 1px solid var(--fg); display: none; }
+@media (min-width: 900px) { .ex-head { display: grid; } }
+.ex details { border-bottom: 1px solid var(--line); }
+.ex summary { list-style: none; cursor: pointer; padding: 1.35rem 0; transition: background-color .2s; }
+.ex summary::-webkit-details-marker { display: none; }
+.ex summary:hover { background: rgba(255,255,255,.03); }
+.ex .n { font-family: var(--geez); font-size: 1.25rem; color: var(--signal-text); }
+.ex .co { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(1.25rem, 2.2vw, 1.75rem); line-height: 1.05; }
+.ex .ro, .ex .pe { color: var(--muted); }
+.ex .st { display: inline-flex; align-items: center; gap: .5rem; }
+.ex .st i { width: .45rem; height: .45rem; rotate: 45deg; background: var(--muted); }
+.ex .st.on { color: var(--ok); }
+.ex .st.on i { background: var(--ok); }
+.ex .pm { color: var(--signal-text); transition: rotate .3s var(--ease-out); text-align: right; }
+.ex details[open] .pm { rotate: 45deg; }
+.ex .mob { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: .25rem 1rem; color: var(--muted); }
+.ex .ro, .ex .pe, .ex .st-d { display: none; }
+@media (min-width: 900px) {
+  .ex .ro, .ex .pe { display: block; }
+  .ex .st-d { display: inline-flex; }
+  .ex .mob { display: none; }
+}
+.ex .body { padding: 0 0 1.75rem; display: grid; gap: 1rem; }
+@media (min-width: 900px) { .ex .body { grid-template-columns: 3.5rem minmax(0, 1fr); column-gap: 1rem; } .ex .body > div { grid-column: 2; } }
+.ex .body h4 { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: 1.35rem; }
+.ex .body .when { color: var(--muted); margin-bottom: .25rem; }
+.ex .body ul { margin-top: .75rem; max-width: 64ch; }
+
+/* =========================================================
+   Footer / contact
+   ========================================================= */
+.foot-cta { padding-block: 7rem 2rem; }
+.foot-cta .mega { font-size: clamp(3.25rem, 10.5vw, 9.5rem); }
+.foot-grid { display: grid; gap: 2.5rem; margin-top: 3.5rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .foot-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.foot-grid h3 { margin-bottom: .9rem; color: var(--muted); }
+.foot-grid li + li { margin-top: .35rem; }
+.foot-grid a:hover { text-decoration: underline; text-underline-offset: .2em; }
+.btn-solid { --cut: 10px; display: inline-flex; align-items: center; gap: .75rem; height: 3.25rem; padding: 0 1.5rem; background: var(--flood-ink); color: var(--flood); font-weight: 600; }
+.btn-solid:hover { background: var(--bg); color: var(--fg); }
+.btn-line { --cut: 10px; display: inline-flex; align-items: center; height: 3.25rem; padding: 0 1.5rem; font-weight: 500; }
+.cta-row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: 1.5rem; }
+.copied { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; min-width: 5rem; }
+.colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; margin-top: 5rem; border-top: 1px solid var(--line); color: var(--muted); }
+.proverb { padding: 1.25rem 0 2rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: baseline; }
+.proverb [lang="am"] { font-size: 1.05rem; color: var(--fg); }
+
+/* Scroll reveal */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+  .js [data-reveal].in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .name .w > span { transform: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip label cut" style="position:fixed;left:1rem;top:1rem;z-index:110;transform:translateY(-6rem);background:var(--signal);color:var(--signal-ink);padding:.75rem 1rem" onfocus="this.style.transform='none'" onblur="this.style.transform='translateY(-6rem)'">Skip to content</a>
+
+<div class="grid-bg" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+<!-- Full-screen menu -->
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Site menu" aria-hidden="true">
+  <div class="shell">
+    <nav aria-label="Sections">
+      <ul class="menu-links">
+        <li><a href="#top"><span class="n" aria-hidden="true">፩</span><span class="t">Index</span></a></li>
+        <li><a href="#toolkit"><span class="n" aria-hidden="true">፪</span><span class="t">Toolkit</span></a></li>
+        <li><a href="#work"><span class="n" aria-hidden="true">፫</span><span class="t">Work</span></a></li>
+        <li><a href="#experience"><span class="n" aria-hidden="true">፬</span><span class="t">Experience</span></a></li>
+        <li><a href="#contact"><span class="n" aria-hidden="true">፭</span><span class="t">Contact</span></a></li>
+      </ul>
+    </nav>
+    <div class="menu-foot">
+      <div><p class="label" style="opacity:.7">Connect</p><p style="margin-top:.6rem">asratabel03@gmail.com</p><p>Addis Ababa, Ethiopia</p></div>
+      <div><p class="label" style="opacity:.7">Elsewhere</p><p style="margin-top:.6rem"><a href="https://github.com/ads-tres">GitHub</a></p><p><a href="https://www.linkedin.com/in/abel-asrat-870536395">LinkedIn</a></p></div>
+    </div>
+  </div>
+</div>
+
+<header class="site-head">
+  <div class="shell">
+    <a class="brand label" href="#top"><span class="mark cut" aria-hidden="true">አ</span><span>Abel Asrat<span class="sr-only">, home</span></span></a>
+    <button class="mode label" id="mode" type="button"><span class="muted">Mode</span> <span id="mode-v">Dark</span></button>
+    <div class="head-status label" aria-hidden="true"><span class="dot"></span><span>Open to full-stack and Flutter work</span></div>
+    <button class="menu-btn label cut outline" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="shell">
+      <div class="stage">
+        <div class="intro">
+          <p class="label accent">Full-stack and mobile developer</p>
+          <p class="lead">Abel Asrat builds admin systems, multi-tenant back-ends and Amharic–English Flutter apps from Addis Ababa.</p>
+        </div>
+        <p class="since label">Shipping since <strong>’24</strong><br>B.Sc. Computer Eng. <strong>’23</strong></p>
+
+        <figure class="fidel-card cut" aria-label="The letters of Abel Asrat in the Ge'ez fidel table">
+          <div class="head label"><span>ፊደል, the Ge’ez script</span><span id="fidel-count">7 orders</span></div>
+          <div class="fidel" id="fidel" aria-hidden="true"></div>
+          <div class="spelled"><span lang="am" id="spelled">አቤል አስራት</span><span class="label muted">Abel Asrat, spelled from the table</span></div>
+        </figure>
+
+        <h1 class="name display" aria-label="Abel Asrat">
+          <span class="w" aria-hidden="true"><span>Abel</span></span>
+          <span class="w" aria-hidden="true"><span>Asrat</span></span>
+        </h1>
+      </div>
+      <div class="cue label" aria-hidden="true"><span>Scroll</span><i></i></div>
+
+      <div class="manifesto">
+        <div class="locator cut" data-reveal>
+          <svg viewBox="0 0 300 220" role="img" aria-label="Map grid with a marker on Addis Ababa at 9 degrees north, 38.7 degrees east">
+            <g id="grat"></g>
+            <g id="pin"></g>
+          </svg>
+          <div class="cap">
+            <span class="label">Addis Ababa, ET</span>
+            <span lang="am">አዲስ አበባ</span>
+            <span class="label muted">9°02′N 38°44′E</span>
+            <span class="label muted"><span id="eth-date" lang="am" style="font-family:var(--geez);letter-spacing:0;text-transform:none;font-size:.85rem"></span></span>
+          </div>
+        </div>
+        <p class="text" data-reveal>Hello! I’m Abel, a full-stack and mobile developer with a B.Sc. in Computer Engineering. <span class="muted">I build large admin systems, multi-tenant back-ends, versioned REST APIs and cross-platform apps, from a tutoring company’s ERP with 80+ modules to gym and rental SaaS. I care about clean architecture, tested code and interfaces that work in Amharic and English.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Toolkit ===== -->
+  <section class="flood sec" id="toolkit" aria-labelledby="toolkit-title">
+    <div class="shell">
+      <div class="band label" aria-hidden="true"><span>ፊደል ሀ–ፐ</span><span class="chars" id="band1"></span></div>
+      <header class="sec-head">
+        <div>
+          <span class="am-word" lang="am">መሳሪያዎች</span>
+          <h2 class="mega display" id="toolkit-title">Toolkit</h2>
+        </div>
+        <p class="meta label"><b id="tool-count">31</b> tools <span aria-hidden="true">/</span> <b id="group-count">8</b> disciplines</p>
+      </header>
+      <div class="toolkit" id="toolkit-list">
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">01</span>Languages</h3><ul><li class="chip cut outline">PHP</li><li class="chip cut outline">Dart</li><li class="chip cut outline">JavaScript</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">02</span>Back-end</h3><ul><li class="chip cut outline">Laravel</li><li class="chip cut outline">Filament</li><li class="chip cut outline">Livewire</li><li class="chip cut outline">Sanctum</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">03</span>Mobile</h3><ul><li class="chip cut outline">Flutter</li><li class="chip cut outline">Riverpod</li><li class="chip cut outline">Dio</li><li class="chip cut outline">go_router</li><li class="chip cut outline">fl_chart</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">04</span>Front-end</h3><ul><li class="chip cut outline">React</li><li class="chip cut outline">Tailwind CSS</li><li class="chip cut outline">Alpine.js</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">05</span>Databases</h3><ul><li class="chip cut outline">MySQL</li><li class="chip cut outline">PostgreSQL</li><li class="chip cut outline">Redis</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">06</span>Testing and DevOps</h3><ul><li class="chip cut outline">Pest</li><li class="chip cut outline">Larastan</li><li class="chip cut outline">Pint</li><li class="chip cut outline">Docker</li><li class="chip cut outline">Git</li><li class="chip cut outline">GitHub Actions</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">07</span>Integrations</h3><ul><li class="chip cut outline">Chapa payments</li><li class="chip cut outline">AfroMessage SMS</li><li class="chip cut outline">Telegram bots</li><li class="chip cut outline">AI features</li></ul></div>
+        <div class="tk-row" data-reveal><h3 class="label"><span class="c">08</span>Design</h3><ul><li class="chip cut outline">Figma</li><li class="chip cut outline">Illustrator</li><li class="chip cut outline">Photoshop</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Work ===== -->
+  <section class="sec" id="work" aria-labelledby="work-title">
+    <div class="shell">
+      <header class="sec-head">
+        <div>
+          <span class="am-word" lang="am">ስራዎች</span>
+          <h2 class="mega display" id="work-title">Work</h2>
+        </div>
+        <p class="meta label"><b>06</b> projects</p>
+      </header>
+
+      <div class="cases">
+        <!-- 1 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፩</span><span>Staff panel</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">520+</div><p class="small">Pest tests running in GitHub Actions on every push</p></div></div>
+            <img class="shot" src="images/gym-platform.png" alt="Staff panel of the gym management platform" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2026 / SaaS back-end</span></p>
+            <h3 class="display">Gym management platform</h3>
+            <p class="role label">Freelance, back-end and staff panel</p>
+            <p class="what">A multi-tenant back-end for gyms with many branches. One versioned REST API serves both the front-desk staff panel and the member app.</p>
+            <ul class="tags label"><li class="cut outline">Laravel 13</li><li class="cut outline">Filament 5</li><li class="cut outline">PostgreSQL</li><li class="cut outline">Docker</li><li class="cut outline">Chapa</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>Each gym’s data is isolated with organization scoping and composite foreign keys, behind Sanctum-authenticated endpoints.</li>
+                  <li>Plans and memberships with freezes, discounts, branch-only plans, visit packs and opening hours. Payments, refunds, voids and receipts, with money stored as integer minor units.</li>
+                  <li>Online payments through each gym’s own Chapa account, confirmed by webhook. SMS sign-in codes, renewal reminders and announcements through AfroMessage.</li>
+                  <li>A Filament staff panel for the front desk: register members, sell memberships, take payments and check people in with rotating QR codes.</li>
+                </ul>
+                <dl class="facts">
+                  <div><dt>520+</dt><dd>Pest tests, with Larastan and Pint in CI</dd></div>
+                  <div><dt>19</dt><dd>architecture decision records</dd></div>
+                  <div><dt>124</dt><dd>of the project’s 127 commits written by me</dd></div>
+                </dl>
+                <p class="links label"><a href="https://github.com/azabla/gym-platform">Source on GitHub</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 2 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፪</span><span>Check-in pass</span></p>
+            <div class="sk"><div class="device phone cut"><span class="mini-label"><span>Volt</span><span>Active</span></span><div class="qr" id="qr" aria-hidden="true"></div><span class="mini-label"><span>Rotates every 30 s</span></span><div class="bar"><i style="width:62%"></i></div></div></div>
+            <img class="shot" src="images/volt.png" alt="Volt member app check-in screen" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2026 / Mobile app</span></p>
+            <h3 class="display">Volt member app</h3>
+            <p class="role label">Freelance, Flutter</p>
+            <p class="what">The Android-first app for the gym platform. Members sign in with a one-time code, check their membership, buy plans through Chapa checkout and see their payment history.</p>
+            <ul class="tags label"><li class="cut outline">Flutter</li><li class="cut outline">Riverpod</li><li class="cut outline">Dio</li><li class="cut outline">go_router</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>A rotating QR check-in pass that brightens the screen at the door, plus visit history. Available in Amharic and English.</li>
+                  <li>Dev, staging and production flavors, and a built-in fake back-end that follows the API contract, so the app was built and tested before the API went live.</li>
+                </ul>
+                <p class="links label"><a href="https://github.com/ads-tres/Volt-Fitness">Source on GitHub</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 3 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፫</span><span>Monthly rent</span></p>
+            <div class="sk"><div class="device phone cut">
+              <span class="mini-label"><span>ኪራይ</span><span>This month</span></span>
+              <span class="mini-label" style="margin-top:.5rem"><span>Due</span></span><div class="bar"><i style="width:100%"></i></div>
+              <span class="mini-label"><span>Collected</span></span><div class="bar"><i style="width:68%"></i></div>
+              <span class="mini-label"><span>Outstanding</span></span><div class="bar"><i style="width:32%"></i></div>
+              <span class="mini-label" style="margin-top:.5rem"><span>Rent cap</span><span style="color:var(--ok)">OK</span></span>
+            </div></div>
+            <img class="shot" src="images/kiray.png" alt="Kiray app monthly rent screen" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2026 / API and mobile app</span><span class="live">In progress</span></p>
+            <h3 class="display">Kiray</h3>
+            <p class="role label">Freelance, back-end and Flutter app</p>
+            <p class="what">Rent and maintenance tracking for Addis Ababa landlords with 2 to 20 units: properties, tenants, leases, rent and repairs.</p>
+            <ul class="tags label"><li class="cut outline">Laravel 13 API</li><li class="cut outline">Flutter</li><li class="cut outline">PostgreSQL</li><li class="cut outline">SMS sign-in</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>Phone sign-in with hashed, rate-limited SMS codes, per-landlord data isolation, and encrypted tenant ID numbers with consent records to meet Ethiopia’s data-protection law.</li>
+                  <li>Leases follow the Addis Ababa rental directive: a two-year minimum, a yearly rent-cap check and late flags.</li>
+                  <li>A Flutter app in Amharic and English with a monthly view of rent due, collected and outstanding, and a bilingual landing page with a waitlist.</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 4 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፬</span><span>ERP</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">80+</div><p class="small">modules across academics, finance, HR and operations, with 18 roles</p></div></div>
+            <img class="shot" src="images/erp.png" alt="Ethio-Heran ERP dashboard" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2024 to now / ERP</span></p>
+            <h3 class="display">Tutoring company ERP</h3>
+            <p class="role label">Ethio-Heran PLC, full-stack developer</p>
+            <p class="what">The system Ethio-Heran runs on, from hiring tutors and scheduling exams to payroll and real-profit reports.</p>
+            <ul class="tags label"><li class="cut outline">Laravel</li><li class="cut outline">Filament</li><li class="cut outline">AI features</li><li class="cut outline">SMS</li><li class="cut outline">Telegram</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>Academics: an AI question bank built from saved notes, scheduled exam papers, results, report cards and impact tracking.</li>
+                  <li>Finance: payments, credit requests, tutor payroll, expenses, income against salary for each tutor and staff member, and real-profit summaries.</li>
+                  <li>HR: tutor hiring from application through exam, interview, training and contract, plus KPIs, audits, penalties and a seven-step exit clearance.</li>
+                  <li>Operations: call-center leads, attendance and report gap auditors, a task board, message rules and SMS and Telegram reports.</li>
+                </ul>
+                <p class="links label"><a href="https://ethioherantutor.com">ethioherantutor.com</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 5 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፭</span><span>Multisite</span></p>
+            <div class="sk"><div class="device browser cut"><div class="big">4 sites</div><p class="small">one Laravel codebase and one set of tables</p></div></div>
+            <img class="shot" src="images/multisite.png" alt="One of the Adulis Media sites" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2025 to now / Multisite</span></p>
+            <h3 class="display">Tourism and art multisite</h3>
+            <p class="role label">Adulis Media, remote</p>
+            <p class="what">Four branded sites for tours, Ethiopian art sales and trip consultation that share one codebase: Dejene Ethiopia Tours, Group Tour Ethiopia, Adulis Ethiopian Art and Ethiopia Trip Planner.</p>
+            <ul class="tags label"><li class="cut outline">Laravel</li><li class="cut outline">Multisite</li><li class="cut outline">SEO</li><li class="cut outline">Hosting</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>Each site keeps its own branding while sharing one codebase and one set of tables, so a fix ships to all four at once.</li>
+                  <li>I also handle SEO and hosting for all four sites.</li>
+                </ul>
+                <p class="links label"><a href="https://dejenehodes.com">dejenehodes.com</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <!-- 6 -->
+        <article class="case">
+          <div class="cover cut" data-reveal>
+            <div class="ground"></div>
+            <p class="tag label"><span lang="am">፮</span><span>App designs</span></p>
+            <div class="sk"><div class="device phone cut"><span class="mini-label"><span>Flutter</span><span>2025</span></span><div class="big" style="margin-top:.4rem">4 apps</div><div class="apps"><span>SHAD</span><span>Equb</span><span>ServerDashboard</span><span>Prediction market</span></div></div></div>
+            <img class="shot" src="images/flutter-apps.png" alt="Flutter app designs" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="info" data-reveal>
+            <p class="kicker label"><span>2025 / Mobile app designs</span></p>
+            <h3 class="display">Flutter app designs</h3>
+            <p class="role label">Personal projects</p>
+            <p class="what">Four complete Flutter apps, from e-commerce to Ethiopian rotating savings groups.</p>
+            <ul class="tags label"><li class="cut outline">Flutter</li><li class="cut outline">Dart</li><li class="cut outline">fl_chart</li><li class="cut outline">go_router</li></ul>
+            <details>
+              <summary class="label cut outline"><span class="closed-t">Read the case</span><span class="open-t">Close the case</span><span class="pm" aria-hidden="true">+</span></summary>
+              <div class="detail-wrap">
+                <ul class="detail">
+                  <li>SHAD: e-commerce with catalog, product details, wishlist, cart, checkout, email-verified onboarding and 12 account screens.</li>
+                  <li>Equb: for Ethiopian rotating savings groups. Create and join groups, track members and contributions, and confirm payments.</li>
+                  <li>ServerDashboard: server monitoring with performance charts, status and uptime cards, alerts and token-based connection.</li>
+                  <li>Prediction market: markets by category, market details, a portfolio and full sign-up, verification and password reset.</li>
+                </ul>
+                <p class="links label"><a href="https://github.com/ads-tres">More on GitHub</a></p>
+              </div>
+            </details>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experience ===== -->
+  <section class="night sec" id="experience" aria-labelledby="experience-title">
+    <div class="shell">
+      <div class="band label" aria-hidden="true"><span>ሰላም, peace and hello</span><span class="chars" id="band2"></span></div>
+      <header class="sec-head">
+        <div>
+          <span class="am-word" lang="am">ልምድ</span>
+          <h2 class="mega display" id="experience-title">Experience</h2>
+        </div>
+        <p class="meta label"><b>06</b> entries</p>
+      </header>
+
+      <div class="ex">
+        <div class="ex-head label" aria-hidden="true"><span>No.</span><span>Company</span><span>Role</span><span>Period</span><span>Status</span><span></span></div>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፩</span>
+            <span class="co">Ethio-Heran PLC</span>
+            <span class="ro">Full-stack developer</span>
+            <span class="pe label">Oct 2024 to now</span>
+            <span class="st st-d on label"><i></i>On duty</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>Full-stack developer</span><span>Oct 2024 to now</span><span class="st on"><i></i>On duty</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">Oct 2024 to now / Full-time</p>
+            <h4>Full-stack developer</h4>
+            <ul class="detail">
+              <li>Built the company’s ERP in Laravel and Filament: 80+ modules across academics, finance, HR and operations, with 18 roles.</li>
+              <li>AI question bank, exam scheduling, report cards, tutor payroll, real-profit summaries, a hiring pipeline and SMS and Telegram reports.</li>
+            </ul>
+            <p class="links label"><a href="https://ethioherantutor.com">Visit site</a></p>
+          </div></div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፪</span>
+            <span class="co">Adulis Media</span>
+            <span class="ro">Full-stack developer (Laravel)</span>
+            <span class="pe label">Mar 2025 to now</span>
+            <span class="st st-d on label"><i></i>On duty</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>Full-stack developer</span><span>Mar 2025 to now</span><span class="st on"><i></i>On duty</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">Mar 2025 to now / Remote</p>
+            <h4>Full-stack developer (Laravel)</h4>
+            <ul class="detail">
+              <li>Built a Laravel multisite: branded sites for tours, Ethiopian art sales and trip consultation sharing one codebase and tables.</li>
+              <li>Dejene Ethiopia Tours, Group Tour Ethiopia, Adulis Ethiopian Art and Ethiopia Trip Planner, including SEO and hosting.</li>
+            </ul>
+            <p class="links label"><a href="https://dejenehodes.com">Visit site</a></p>
+          </div></div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፫</span>
+            <span class="co">Freelance</span>
+            <span class="ro">Full-stack and mobile developer</span>
+            <span class="pe label">2025 to now</span>
+            <span class="st st-d on label"><i></i>On duty</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>Full-stack and mobile</span><span>2025 to now</span><span class="st on"><i></i>On duty</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">2025 to now / Freelance</p>
+            <h4>Full-stack and mobile developer</h4>
+            <ul class="detail">
+              <li>Multi-gym SaaS in Laravel, Filament and PostgreSQL with the Volt Flutter member app.</li>
+              <li>Kiray rent and lease app (Laravel and Flutter), plus Flutter apps: SHAD, Equb, ServerDashboard and a prediction market.</li>
+            </ul>
+          </div></div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፬</span>
+            <span class="co">K Gym</span>
+            <span class="ro">Full-stack developer</span>
+            <span class="pe label">Nov 2025 to Apr 2026</span>
+            <span class="st st-d label"><i></i>Ended</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>Full-stack developer</span><span>Nov 2025 to Apr 2026</span><span class="st"><i></i>Ended</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">Nov 2025 to Apr 2026</p>
+            <h4>Full-stack developer</h4>
+            <ul class="detail">
+              <li>Gym system in Laravel and Filament: members, packages, add-ons, payments, expenses and Shield roles, starting from a Figma prototype.</li>
+            </ul>
+          </div></div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፭</span>
+            <span class="co">Bahir Dar University</span>
+            <span class="ro">B.Sc. Computer Engineering</span>
+            <span class="pe label">2018 to 2023</span>
+            <span class="st st-d label"><i></i>Graduated</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>B.Sc. Computer Engineering</span><span>2018 to 2023</span><span class="st"><i></i>Graduated</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">2018 to 2023 / Bachelor’s degree</p>
+            <h4>B.Sc. Computer Engineering</h4>
+          </div></div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="n" aria-hidden="true">፮</span>
+            <span class="co">Cisco</span>
+            <span class="ro">Introduction to Networks (CCNAv7)</span>
+            <span class="pe label">Certificate</span>
+            <span class="st st-d label"><i></i>Certified</span>
+            <span class="pm" aria-hidden="true">+</span>
+            <span class="mob label"><span>Introduction to Networks (CCNAv7)</span><span class="st"><i></i>Certified</span></span>
+          </summary>
+          <div class="body"><div>
+            <p class="when label">Certificate</p>
+            <h4>Introduction to Networks (CCNAv7)</h4>
+          </div></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Contact ===== -->
+<footer class="flood" id="contact">
+  <div class="shell foot-cta">
+    <span style="opacity:.8;font-size:1.05rem;font-weight:600" lang="am">አግኙኝ</span>
+    <h2 class="mega display" style="margin-top:.75rem">Need a system built?</h2>
+    <p class="label" style="margin-top:1.25rem;opacity:.8">Based in Addis Ababa, ET <span aria-hidden="true">/</span> UTC+3 <span aria-hidden="true">/</span> On-site or remote</p>
+    <div class="cta-row">
+      <a class="btn-solid cut label" href="mailto:asratabel03@gmail.com">Send an email</a>
+      <button class="btn-line cut outline label" id="copy" type="button">Copy email</button>
+      <span class="copied" id="copied" role="status" aria-live="polite"></span>
+    </div>
+
+    <div class="foot-grid">
+      <div><h3 class="label">Direct</h3><ul><li><a href="mailto:asratabel03@gmail.com">asratabel03@gmail.com</a></li><li>Addis Ababa, Ethiopia</li></ul></div>
+      <div><h3 class="label">Elsewhere</h3><ul><li><a href="https://github.com/ads-tres">GitHub</a></li><li><a href="https://www.linkedin.com/in/abel-asrat-870536395">LinkedIn</a></li></ul></div>
+      <div><h3 class="label">Languages</h3><ul><li>Amharic</li><li>English</li></ul></div>
+    </div>
+
+    <div class="colophon label">
+      <span>© 2026 Abel Asrat</span>
+      <a href="#top">Back to top</a>
+    </div>
+    <p class="proverb label"><span lang="am">ቀስ በቀስ እንቁላል በእግሩ ይሄዳል።</span><span>Little by little, an egg learns to walk. It’s how software gets built too.</span></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* ---------- Theme ---------- */
+  var modeBtn = document.getElementById('mode'), modeV = document.getElementById('mode-v');
+  function syncMode() {
+    var t = root.getAttribute('data-theme');
+    modeV.textContent = t === 'dark' ? 'Dark' : 'Light';
+    modeBtn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' mode');
+    var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = t === 'dark' ? '#0F0E13' : '#F4F3F7';
+  }
+  modeBtn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    syncMode();
+  });
+  syncMode();
+
+  /* ---------- Menu ---------- */
+  var menu = document.getElementById('menu'), menuBtn = document.getElementById('menu-btn');
+  function setMenu(open) {
+    menu.classList.toggle('open', open);
+    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    root.classList.toggle('menu-open', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? 'Close' : 'Menu';
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) { var first = menu.querySelector('a'); if (first) first.focus(); } else { menuBtn.focus({ preventScroll: true }); }
+  }
+  menuBtn.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.classList.contains('open')) setMenu(false); });
+
+  /* ---------- Header on scroll ---------- */
+  var head = document.querySelector('.site-head');
+  function onScroll() { head.classList.toggle('scrolled', window.scrollY > 10); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ---------- Fidel table: rows ለ ረ ሰ በ ተ አ, seven orders each ---------- */
+  var rows = [['le', 0x1208], ['re', 0x1228], ['se', 0x1230], ['be', 0x1260], ['te', 0x1270], ['a', 0x12A0]];
+  // Letters of አቤል አስራት as [row index, order]
+  var nameSeq = [[5,0],[3,4],[0,5],[5,0],[2,5],[1,3],[4,5]];
+  var fidel = document.getElementById('fidel'), html = '<span></span>';
+  for (var o = 1; o <= 7; o++) html += '<span class="h">' + o + '</span>';
+  rows.forEach(function (r, ri) {
+    html += '<span class="r">' + r[0] + '</span>';
+    for (var k = 0; k < 7; k++) html += '<span class="c" data-k="' + ri + '-' + k + '">' + String.fromCharCode(r[1] + k) + '</span>';
+  });
+  fidel.innerHTML = html;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function lightName() {
+    nameSeq.forEach(function (p, i) {
+      var cell = fidel.querySelector('[data-k="' + p[0] + '-' + p[1] + '"]');
+      if (reduce) cell.classList.add('on'); else setTimeout(function () { cell.classList.add('on'); }, 500 + i * 160);
+    });
+  }
+
+  /* ---------- Hero entrance ---------- */
+  requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('ready'); lightName(); }); });
+
+  /* ---------- Locator map ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  var lat0 = 3, lat1 = 15, lon0 = 33, lon1 = 48, W = 300, H = 220, pad = 22;
+  function x(lon) { return pad + (lon - lon0) / (lon1 - lon0) * (W - pad * 1.5); }
+  function y(lat) { return H - pad - (lat - lat0) / (lat1 - lat0) * (H - pad * 1.5); }
+  var g = document.getElementById('grat'), s = '';
+  for (var lo = lon0; lo <= lon1; lo += 3) s += '<line class="grat" x1="' + x(lo) + '" y1="' + y(lat1) + '" x2="' + x(lo) + '" y2="' + y(lat0) + '"/><text class="axis" x="' + x(lo) + '" y="' + (H - 6) + '" text-anchor="middle">' + lo + '°E</text>';
+  for (var la = lat0; la <= lat1; la += 3) s += '<line class="grat" x1="' + x(lon0) + '" y1="' + y(la) + '" x2="' + x(lon1) + '" y2="' + y(la) + '"/><text class="axis" x="4" y="' + (y(la) + 3) + '">' + la + '°N</text>';
+  g.innerHTML = s;
+  var px = x(38.74), py = y(9.03);
+  document.getElementById('pin').innerHTML =
+    '<line class="cross" x1="' + px + '" y1="' + y(lat1) + '" x2="' + px + '" y2="' + y(lat0) + '"/>' +
+    '<line class="cross" x1="' + x(lon0) + '" y1="' + py + '" x2="' + x(lon1) + '" y2="' + py + '"/>' +
+    '<rect class="pulse" x="' + (px - 4) + '" y="' + (py - 4) + '" width="8" height="8"/>' +
+    '<rect class="marker" x="' + (px - 4) + '" y="' + (py - 4) + '" width="8" height="8" transform="rotate(45 ' + px + ' ' + py + ')"/>';
+
+  /* ---------- Ethiopian date ---------- */
+  var months = ['መስከረም','ጥቅምት','ኅዳር','ታኅሣሥ','ጥር','የካቲት','መጋቢት','ሚያዝያ','ግንቦት','ሰኔ','ሐምሌ','ነሐሴ','ጳጉሜ'];
+  function toEthiopian(d) {
+    var Y = d.getFullYear(), M = d.getMonth() + 1, D = d.getDate();
+    var a = Math.floor((14 - M) / 12), yy = Y + 4800 - a, mm = M + 12 * a - 3;
+    var jdn = D + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+    var e = jdn - 1723856, r = ((e % 1461) + 1461) % 1461, n = (r % 365) + 365 * Math.floor(r / 1460);
+    return { y: 4 * Math.floor(e / 1461) + Math.floor(r / 365) - Math.floor(r / 1460), m: Math.floor(n / 30) + 1, d: (n % 30) + 1 };
+  }
+  var et = toEthiopian(new Date());
+  document.getElementById('eth-date').textContent = 'ዛሬ ' + months[et.m - 1] + ' ' + et.d + ', ' + et.y + ' ዓ.ም.';
+
+  /* ---------- Fidel bands ---------- */
+  function bandText(start, count) { var t = ''; for (var i = 0; i < count; i++) t += String.fromCharCode(start + i * 8); return t; }
+  document.getElementById('band1').textContent = bandText(0x1200, 33).repeat(2);
+  document.getElementById('band2').textContent = 'ሰላም ' .repeat(30);
+
+  /* ---------- Toolkit counts ---------- */
+  var list = document.getElementById('toolkit-list');
+  document.getElementById('tool-count').textContent = list.querySelectorAll('.chip').length;
+  document.getElementById('group-count').textContent = list.querySelectorAll('.tk-row').length;
+
+  /* ---------- QR pattern (decorative) ---------- */
+  var qr = document.getElementById('qr');
+  if (qr) {
+    var seed = 11, q = '';
+    function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    for (var i = 0; i < 121; i++) {
+      var cx = i % 11, cy = Math.floor(i / 11);
+      var fin = (cx < 3 && cy < 3) || (cx > 7 && cy < 3) || (cx < 3 && cy > 7);
+      var gap = !fin && ((cx < 4 && cy < 4) || (cx > 6 && cy < 4) || (cx < 4 && cy > 6));
+      q += '<i' + ((fin || (!gap && rnd() > .5)) ? '' : ' class="off"') + '></i>';
+    }
+    qr.innerHTML = q;
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  var items = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  /* ---------- Copy email ---------- */
+  var copyBtn = document.getElementById('copy'), out = document.getElementById('copied');
+  copyBtn.addEventListener('click', function () {
+    function done(m) { out.textContent = m; setTimeout(function () { out.textContent = ''; }, 2500); }
+    try { navigator.clipboard.writeText('asratabel03@gmail.com').then(function () { done('Copied'); }, function () { done('Copy failed'); }); }
+    catch (e) { done('Copy failed'); }
+  });
+})();
+</script>
+</body>
+</html>
